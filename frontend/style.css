@@ -1,0 +1,546 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono&display=swap');
+
+:root {
+    --bg-color: #0c0c0c;
+    --text-color: #ffffff;
+    --text-muted: #888888;
+    --accent-color: #ff0033;
+    --accent-hover: #cc0029;
+    --border-color: #222222;
+    --border-active: #ffffff;
+    --font-sans: 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+/* Сетка разметки в стиле Pitchfork */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    border-bottom: 2px solid var(--border-active);
+    padding-bottom: 2rem;
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.logo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: var(--accent-color);
+}
+
+.nav-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.nav-links a:hover {
+    border-color: var(--border-active);
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Основной контент */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* Поисковая панель */
+.search-section {
+    width: 100%;
+}
+
+.search-wrapper {
+    position: relative;
+    border: 2px solid var(--border-active);
+    background-color: #111;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-family: var(--font-sans);
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 1.5rem 2rem;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #444;
+}
+
+.search-button {
+    background: var(--accent-color);
+    border: none;
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    height: 100%;
+    padding: 0 3rem;
+    cursor: pointer;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.search-button:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Результаты поиска */
+.results-section {
+    display: none; /* Отображается динамически */
+    border: 2px solid var(--border-active);
+    padding: 2.5rem;
+    background-color: #121212;
+}
+
+.results-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.results-title {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.results-source {
+    font-family: var(--font-mono);
+    color: var(--accent-color);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+/* Кастомный аудио плеер */
+.custom-player {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.player-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.player-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.player-author {
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+}
+
+.visualizer-container {
+    height: 120px;
+    background-color: #080808;
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.visualizer-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.btn-play {
+    background: var(--text-color);
+    color: var(--bg-color);
+    border: none;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-play:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+.progress-bar-container {
+    flex: 1;
+    height: 8px;
+    background-color: #222;
+    cursor: pointer;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--accent-color);
+    width: 0%;
+}
+
+.time-display {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    min-width: 80px;
+    text-align: right;
+}
+
+/* Эмбеды (YouTube, SoundCloud) */
+.embed-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.embed-item {
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    background-color: #161616;
+    transition: border-color 0.2s ease;
+}
+
+.embed-item:hover {
+    border-color: var(--border-active);
+}
+
+.embed-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.embed-item-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    max-width: 80%;
+}
+
+.embed-item-channel {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.iframe-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 ratio */
+    height: 0;
+    overflow: hidden;
+    background-color: #000;
+    border: 1px solid #222;
+}
+
+.iframe-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* Панель «Звук не найден» */
+.not-found-panel {
+    display: none;
+    border: 2px dashed var(--accent-color);
+    padding: 3rem;
+    text-align: center;
+    background-color: #13090a;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.not-found-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--accent-color);
+}
+
+.not-found-text {
+    max-width: 600px;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.btn-action {
+    background: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--text-color);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Форма загрузки (Секция добавления звука) */
+.upload-section {
+    border: 2px solid var(--border-active);
+    padding: 2.5rem;
+    background-color: #121212;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.form-input {
+    background-color: #181818;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 0.8rem 1rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+    border-color: var(--border-active);
+}
+
+/* Drag and Drop File Upload */
+.file-dropzone {
+    border: 2px dashed var(--border-color);
+    background-color: #181818;
+    padding: 3rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.file-dropzone:hover, .file-dropzone.dragover {
+    border-color: var(--border-active);
+    background-color: #202020;
+}
+
+.file-dropzone-icon {
+    font-size: 2rem;
+    color: var(--accent-color);
+}
+
+.file-input-hidden {
+    display: none;
+}
+
+/* Капча и Кнопка отправки */
+.captcha-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.captcha-question {
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    font-weight: 700;
+    background-color: #222;
+    padding: 0.8rem 1.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.btn-submit {
+    grid-column: 1 / -1;
+    background-color: var(--accent-color);
+    color: #fff;
+    border: none;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+}
+
+.btn-submit:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Админ-панель модерации */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+.admin-table th, .admin-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table th {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.admin-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-approve {
+    background-color: #00cc66;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.btn-reject {
+    background-color: var(--accent-color);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: var(--border-active);
+    color: var(--bg-color);
+    padding: 1rem 2rem;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    text-transform: uppercase;
+    z-index: 1000;
+    display: none;
+}
+
+footer {
+    margin-top: 5rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}

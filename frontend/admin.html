@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель модератора — FL PULSE</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-section {
+            border: 2px solid var(--border-active);
+            padding: 2.5rem;
+            background-color: #121212;
+        }
+        .password-section {
+            max-width: 400px;
+            margin: 5rem auto;
+            border: 2px solid var(--border-active);
+            padding: 2.5rem;
+            background-color: #121212;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .audio-preview {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        audio {
+            border-radius: 0;
+            background-color: #222;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <header>
+            <div class="logo">FL <span>Pulse</span></div>
+            <div class="nav-links">
+                <a href="index.html">На главную</a>
+            </div>
+        </header>
+
+        <!-- Вход по паролю (отображается, если не авторизован) -->
+        <section id="passwordSection" class="password-section">
+            <h2 class="results-title" style="text-align: center;">Вход в админ-панель</h2>
+            <div class="form-group">
+                <label class="form-label" for="adminPassword">Пароль модератора</label>
+                <input type="password" id="adminPassword" class="form-input" placeholder="Введите пароль...">
+            </div>
+            <button id="loginBtn" class="btn-submit" style="margin-top: 0.5rem;">Войти</button>
+        </section>
+
+        <!-- Панель модерации (отображается после успешной авторизации) -->
+        <main id="adminMain" style="display: none;">
+            <section class="admin-section">
+                <h1 class="section-title">Ожидающие модерации звуки</h1>
+                <div style="overflow-x: auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Плагин</th>
+                                <th>Название превью</th>
+                                <th>Автор</th>
+                                <th>Аудио</th>
+                                <th>Дата загрузки</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingList">
+                            <!-- Заполняется динамически -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="noPendingMessage" style="display: none; text-align: center; padding: 3rem; color: var(--text-muted); font-size: 1.2rem;">
+                    Нет звуков, ожидающих модерации.
+                </div>
+            </section>
+        </main>
+
+        <!-- Подвал -->
+        <footer>
+            <div>FL PULSE — Панель модератора</div>
+            <div>2026</div>
+        </footer>
+    </div>
+
+    <!-- Всплывающие уведомления -->
+    <div id="toast" class="toast">Сообщение</div>
+
+    <script>
+        const passwordSection = document.getElementById('passwordSection');
+        const adminMain = document.getElementById('adminMain');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const loginBtn = document.getElementById('loginBtn');
+        const pendingList = document.getElementById('pendingList');
+        const noPendingMessage = document.getElementById('noPendingMessage');
+        const toast = document.getElementById('toast');
+
+        // Показ уведомлений
+        function showToast(message) {
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Получение пароля из sessionStorage
+        let token = sessionStorage.getItem('admin_token') || '';
+
+        if (token) {
+            showAdminPanel();
+        }
+
+        loginBtn.addEventListener('click', () => {
+            token = adminPasswordInput.value.strip ? adminPasswordInput.value.strip() : adminPasswordInput.value;
+            if (!token) return;
+            sessionStorage.setItem('admin_token', token);
+            showAdminPanel();
+        });
+
+        adminPasswordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loginBtn.click();
+        });
+
+        function showAdminPanel() {
+            passwordSection.style.display = 'none';
+            adminMain.style.display = 'block';
+            loadPendingSounds();
+        }
+
+        async function loadPendingSounds() {
+            try {
+                const response = await fetch('/api/admin/pending', {
+                    headers: {
+                        'Authorization': token
+                    }
+                });
+
+                if (response.status === 401) {
+                    showToast('Неверный пароль!');
+                    sessionStorage.removeItem('admin_token');
+                    passwordSection.style.display = 'flex';
+                    adminMain.style.display = 'none';
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при загрузке данных');
+                }
+
+                const data = await response.json();
+                renderPendingList(data);
+            } catch (err) {
+                showToast('Ошибка: ' + err.message);
+            }
+        }
+
+        function renderPendingList(items) {
+            pendingList.innerHTML = '';
+            if (items.length === 0) {
+                noPendingMessage.style.display = 'block';
+                return;
+            }
+            noPendingMessage.style.display = 'none';
+
+            items.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight: 700;">${item.plugin_name}</td>
+                    <td>${item.title}</td>
+                    <td>${item.author_name}</td>
+                    <td>
+                        <audio src="${item.file_url}" controls preload="none"></audio>
+                    </td>
+                    <td style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">${item.created_at}</td>
+                    <td>
+                        <div class="admin-actions">
+                            <button class="btn-approve" onclick="moderate(${item.id}, 'approve')">Одобрить</button>
+                            <button class="btn-reject" onclick="moderate(${item.id}, 'reject')">Удалить</button>
+                        </div>
+                    </td>
+                `;
+                pendingList.appendChild(tr);
+            });
+        }
+
+        async function moderate(id, action) {
+            try {
+                const response = await fetch(`/api/admin/moderate?sound_id=${id}&action=${action}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Не удалось выполнить модерацию');
+                }
+
+                const res = await response.json();
+                showToast(res.message);
+                loadPendingSounds();
+            } catch (err) {
+                showToast('Ошибка: ' + err.message);
+            }
+        }
+    </script>
+</body>
+</html>

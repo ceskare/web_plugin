@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FL PULSE — Послушай плагин FL Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка сайта -->
+        <header>
+            <div class="logo">FL <span>Pulse</span></div>
+            <div class="nav-links">
+                <a href="admin.html">Панель модератора</a>
+            </div>
+        </header>
+
+        <!-- Основной контент -->
+        <main>
+            <!-- Поиск -->
+            <section class="search-section">
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Введите название плагина (например, Serum)..." autocomplete="off">
+                    <button id="searchBtn" class="search-button">Искать</button>
+                </div>
+            </section>
+
+            <!-- Результаты поиска (Кастомный плеер для оригинальных загрузок) -->
+            <section id="resultsSection" class="results-section">
+                <div class="results-header">
+                    <div class="results-title" id="resultsTitle">Результат поиска</div>
+                    <div class="results-source" id="resultsSource">YouTube</div>
+                </div>
+
+                <!-- Кастомный плеер для загруженных треков -->
+                <div id="customPlayerContainer" class="custom-player" style="display: none;">
+                    <div class="player-info">
+                        <div class="player-title" id="playerPluginTitle">Serum - Awesome Sound</div>
+                        <div class="player-author" id="playerAuthor">Автор: FL_Master</div>
+                    </div>
+                    
+                    <div class="visualizer-container">
+                        <canvas id="visualizer" class="visualizer-canvas"></canvas>
+                    </div>
+
+                    <div class="player-controls">
+                        <button id="playBtn" class="btn-play">Play</button>
+                        <div class="progress-bar-container" id="progressBar">
+                            <div class="progress-bar-fill" id="progressFill"></div>
+                        </div>
+                        <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+                    </div>
+                </div>
+
+                <!-- Эмбеды для YouTube / SoundCloud -->
+                <div id="embedsContainer" class="embed-container">
+                    <!-- Будет заполняться динамически через JS -->
+                </div>
+            </section>
+
+            <!-- Звук не найден -->
+            <section id="notFoundPanel" class="not-found-panel">
+                <div class="not-found-title">Оригинальный звук не найден</div>
+                <div class="not-found-text">
+                    Мы проверили YouTube и SoundCloud, но не нашли релевантного звукового превью для этого плагина. 
+                    Помогите сообществу — загрузите короткий оригинальный сэмпл звучания этого плагина!
+                </div>
+                <button id="scrollToUploadBtn" class="btn-action">Загрузить звук</button>
+            </section>
+
+            <!-- Форма добавления звука -->
+            <section class="upload-section" id="uploadSection">
+                <div class="section-title">Добавить оригинальный звук плагина</div>
+                <form id="uploadForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="formPluginName">Название плагина *</label>
+                            <input type="text" id="formPluginName" class="form-input" required placeholder="Например: Harmor">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="formAuthorName">Ваше имя (Имя автора) *</label>
+                            <input type="text" id="formAuthorName" class="form-input" required placeholder="Например: FL_Studio_Master">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="formSoundTitle">Название превью *</label>
+                            <input type="text" id="formSoundTitle" class="form-input" required placeholder="Например: EDM Lead Preset Demo">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="formYoutubeUrl">Ссылка на видео/аудио (необязательно)</label>
+                            <input type="url" id="formYoutubeUrl" class="form-input" placeholder="https://youtube.com/watch?v=...">
+                        </div>
+
+                        <!-- Dropzone для аудио-файла -->
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">Аудиофайл превью * (Разрешены: .mp3, .wav, .ogg до 5MB, до 30 секунд)</label>
+                            <div class="file-dropzone" id="dropzone">
+                                <div class="file-dropzone-icon">⏏</div>
+                                <div id="dropzoneText">Перетащите файл сюда или нажмите для выбора</div>
+                                <input type="file" id="formFile" class="file-input-hidden" required accept=".mp3,.wav,.ogg">
+                            </div>
+                        </div>
+
+                        <!-- Капча -->
+                        <div class="form-group captcha-wrapper">
+                            <label class="form-label">Подтвердите, что вы не бот *</label>
+                            <div class="captcha-question" id="captchaQuestion">? + ?</div>
+                            <input type="text" id="formCaptchaAnswer" class="form-input" required placeholder="Ответ" style="width: 120px;">
+                            <input type="hidden" id="formCaptchaToken">
+                        </div>
+
+                        <button type="submit" class="btn-submit">Отправить на модерацию</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <!-- Подвал -->
+        <footer>
+            <div>FL PULSE — Оригинальные звуки плагинов FL Studio</div>
+            <div>2026</div>
+        </footer>
+    </div>
+
+    <!-- Всплывающие уведомления -->
+    <div id="toast" class="toast">Сообщение</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
