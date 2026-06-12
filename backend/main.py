@@ -1,11 +1,16 @@
 import os
 import shutil
 import uuid
+import mimetypes
 from fastapi import FastAPI, Depends, UploadFile, File, Form, HTTPException, Header, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from sqlalchemy.orm import Session
+
+# Явно регистрируем типы, чтобы исправить известный баг Windows с MIME-типами CSS/JS в FastAPI
+mimetypes.add_type("text/css", ".css")
+mimetypes.add_type("application/javascript", ".js")
 
 from backend.config import UPLOAD_DIR, ADMIN_PASSWORD, BASE_DIR
 from backend.database import init_db, get_db, CustomSound, Plugin

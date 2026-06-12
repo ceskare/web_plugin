@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FL PULSE — Сэмплы и оригинальное звучание плагинов FL Studio</title>
+    <title>FL PULSE — Оригинальное звучание и сэмплы плагинов FL Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,56 +18,110 @@
 
         <!-- Основной контент -->
         <main>
-            <!-- Герой-секция в стиле Pitchfork -->
-            <section class="hero-section" id="heroSection">
-                <div class="hero-tag">Музыкальная энциклопедия</div>
-                <h1 class="hero-title">FL Studio<br>Inside Sounds</h1>
-                <p class="hero-subtitle">
-                    Интерактивный архив оригинального звучания плагинов. Введите название интересующего синтезатора или эффекта ниже и послушайте оригинальные превью.
-                </p>
+            <!-- Двухколоночная Герой-Секция для заполнения пустоты -->
+            <section class="hero-grid">
+                <div class="hero-text">
+                    <div class="hero-tag">Музыкальная энциклопедия</div>
+                    <h1 class="hero-title">FL Studio<br>Inside Sounds</h1>
+                    <p class="hero-subtitle">
+                        Интерактивный архив оригинального звучания плагинов. Выберите синтезатор или эффект из списка ниже или воспользуйтесь быстрым поиском.
+                    </p>
+                </div>
+                
+                <!-- Статус-панель справа (заполняет свободное место) -->
+                <div class="status-dashboard">
+                    <div class="status-header">
+                        <span>Системный монитор</span>
+                        <span class="status-val accent">v1.2.0</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Статус базы данных:</span>
+                        <span class="status-val active">ONLINE</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Точность фильтрации:</span>
+                        <span class="status-val accent">98.6%</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Аудио-провайдер:</span>
+                        <span class="status-val">YouTube / SC</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Интерфейс:</span>
+                        <span class="status-val">Pitchfork Neo-Dark</span>
+                    </div>
+                </div>
             </section>
 
             <!-- Поисковая панель -->
             <section class="search-section">
                 <div class="search-wrapper">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Введите название плагина (например, Serum)..." autocomplete="off">
-                    <button id="searchBtn" class="search-button">Найти</button>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Введите название плагина (например, Harmor)..." autocomplete="off">
+                    <button id="searchBtn" class="search-button">Найти звук</button>
                 </div>
             </section>
 
-            <!-- Популярные плагины (Featured Grid) -->
+            <!-- Сетки популярных плагинов (Featured Sections) -->
             <section class="featured-section" id="featuredSection">
-                <div class="card-category">Быстрый выбор</div>
-                <div class="featured-grid">
-                    <div class="featured-card" onclick="quickSearch('Serum')">
-                        <div class="card-category">Synthesizer</div>
-                        <div class="card-title">Serum</div>
-                        <div class="card-action">Послушать →</div>
+                <div class="featured-grid-container">
+                    <!-- Колонка 1: Синтезаторы -->
+                    <div>
+                        <div class="featured-header">
+                            <h2 class="featured-section-title">Generators / Синтезаторы</h2>
+                            <span class="card-category">Инструменты</span>
+                        </div>
+                        <div class="featured-grid">
+                            <div class="featured-card" onclick="quickSearch('Serum')">
+                                <div class="card-category">Xfer Records</div>
+                                <div class="card-title">Serum</div>
+                                <div class="card-action">Послушать →</div>
+                            </div>
+                            <div class="featured-card" onclick="quickSearch('Harmor')">
+                                <div class="card-category">Image-Line</div>
+                                <div class="card-title">Harmor</div>
+                                <div class="card-action">Послушать →</div>
+                            </div>
+                            <div class="featured-card" onclick="quickSearch('Sytrus')">
+                                <div class="card-category">Image-Line</div>
+                                <div class="card-title">Sytrus</div>
+                                <div class="card-action">Послушать →</div>
+                            </div>
+                            <div class="featured-card" onclick="quickSearch('Sylenth1')">
+                                <div class="card-category">LennarDigital</div>
+                                <div class="card-title">Sylenth1</div>
+                                <div class="card-action">Послушать →</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="featured-card" onclick="quickSearch('Gross Beat')">
-                        <div class="card-category">Time Effect</div>
-                        <div class="card-title">Gross Beat</div>
-                        <div class="card-action">Послушать →</div>
-                    </div>
-                    <div class="featured-card" onclick="quickSearch('Harmor')">
-                        <div class="card-category">Additive Synth</div>
-                        <div class="card-title">Harmor</div>
-                        <div class="card-action">Послушать →</div>
-                    </div>
-                    <div class="featured-card" onclick="quickSearch('Sytrus')">
-                        <div class="card-category">FM Synth</div>
-                        <div class="card-title">Sytrus</div>
-                        <div class="card-action">Послушать →</div>
-                    </div>
-                    <div class="featured-card" onclick="quickSearch('FLEX')">
-                        <div class="card-category">Preset Library</div>
-                        <div class="card-title">FLEX</div>
-                        <div class="card-action">Послушать →</div>
-                    </div>
-                    <div class="featured-card" onclick="quickSearch('Sylenth1')">
-                        <div class="card-category">Subtractive Synth</div>
-                        <div class="card-title">Sylenth1</div>
-                        <div class="card-action">Послушать →</div>
+
+                    <!-- Колонка 2: Эффекты -->
+                    <div>
+                        <div class="featured-header">
+                            <h2 class="featured-section-title">Effects / Эффекты</h2>
+                            <span class="card-category">Обработка</span>
+                        </div>
+                        <div class="featured-grid">
+                            <div class="featured-card" onclick="quickSearch('Gross Beat')">
+                                <div class="card-category">Time & Pitch</div>
+                                <div class="card-title">Gross Beat</div>
+                                <div class="card-action">Послушать →</div>
+                            </div>
+                            <div class="featured-card" onclick="quickSearch('Vocodex')">
+                                <div class="card-category">Vocoder</div>
+                                <div class="card-title">Vocodex</div>
+                                <div class="card-action">Послушать →</div>
+                            </div>
+                            <div class="featured-card" onclick="quickSearch('Fruity Limiter')">
+                                <div class="card-category">Dynamics</div>
+                                <div class="card-title">Fruity Limiter</div>
+                                <div class="card-action">Послушать →</div>
+                            </div>
+                            <div class="featured-card" onclick="quickSearch('Love Philter')">
+                                <div class="card-category">Filter & LFO</div>
+                                <div class="card-title">Love Philter</div>
+                                <div class="card-action">Послушать →</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -81,14 +135,13 @@
 
                 <!-- Театр / Главный проигрыватель -->
                 <div class="main-player-wrapper">
-                    <!-- Левая часть: само видео/аудио -->
                     <div class="featured-player-container">
-                        <!-- Контейнер для YouTube (первое видео) -->
+                        <!-- YouTube -->
                         <div id="youtubePlayerWrapper" class="iframe-wrapper" style="display: none;">
                             <!-- Заполняется динамически -->
                         </div>
 
-                        <!-- Кастомный плеер для оригинальных загрузок -->
+                        <!-- Кастомный плеер -->
                         <div id="customPlayerContainer" class="custom-player" style="display: none;">
                             <div class="visualizer-container">
                                 <canvas id="visualizer" class="visualizer-canvas"></canvas>
@@ -103,19 +156,19 @@
                         </div>
                     </div>
 
-                    <!-- Правая часть: метаданные текущего звука -->
-                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <!-- Правая часть: метаданные -->
+                    <div style="display: flex; flex-direction: column; justify-content: center; border-left: 1px solid var(--border-color); padding-left: 2.5rem;">
                         <div class="card-category" id="playerCategory">Текущее превью</div>
                         <h3 class="featured-video-title" id="playerPluginTitle">Название плагина</h3>
                         <p class="featured-video-info" id="playerAuthor">Автор видео/файла</p>
                     </div>
                 </div>
 
-                <!-- Второстепенные совпадения (сетка других результатов) -->
+                <!-- Другие совпадения -->
                 <div class="secondary-results" id="secondaryResultsSection">
                     <h3 class="secondary-title">Другие варианты</h3>
                     <div class="results-grid" id="embedsContainer">
-                        <!-- Будет заполнено через JS -->
+                        <!-- Заполняется динамически -->
                     </div>
                 </div>
             </section>
@@ -124,7 +177,7 @@
             <section id="notFoundPanel" class="not-found-panel">
                 <div class="not-found-title">Звук не найден</div>
                 <div class="not-found-text">
-                    Мы проверили YouTube и SoundCloud, но не нашли релевантного сэмпла для этого плагина.
+                    Мы проверили YouTube и SoundCloud, но не нашли оригинального сэмпла для этого плагина.
                     Помогите другим — загрузите короткий оригинальный сэмпл его звучания!
                 </div>
                 <button id="scrollToUploadBtn" class="btn-action">Добавить сэмпл</button>
@@ -137,7 +190,7 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label" for="formPluginName">Название плагина *</label>
-                            <input type="text" id="formPluginName" class="form-input" required placeholder="Например: Sakura">
+                            <input type="text" id="formPluginName" class="form-input" required placeholder="Например: Harmor">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="formAuthorName">Имя автора звука *</label>
@@ -145,7 +198,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="formSoundTitle">Название превью *</label>
-                            <input type="text" id="formSoundTitle" class="form-input" required placeholder="Например: Pluck Preset Demo">
+                            <input type="text" id="formSoundTitle" class="form-input" required placeholder="Например: Super Lead Demo">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="formYoutubeUrl">Ссылка на видео/аудио (необязательно)</label>
@@ -187,7 +240,6 @@
 
     <script src="app.js"></script>
     <script>
-        // Функция быстрого поиска для карточек
         function quickSearch(pluginName) {
             document.getElementById('searchInput').value = pluginName;
             document.getElementById('searchBtn').click();

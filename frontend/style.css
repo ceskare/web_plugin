@@ -1,18 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@800&family=Inter:wght@400;500;700&family=Space+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@800;900&family=Inter:wght@400;500;600;700&family=Space+Mono&display=swap');
 
 :root {
-    --bg-color: #0b0c0e;
-    --card-bg: #131518;
-    --text-color: #ffffff;
-    --text-muted: #8c939d;
-    --accent-color: #ff4c25;      /* Фирменный кораллово-красный Pitchfork */
-    --accent-hover: #e03b18;
-    --border-color: #22252a;
-    --border-active: #ffffff;
+    --bg-color: #111317;           /* Глубокий благородный графитовый фон */
+    --card-bg: #1a1d24;            /* Более светлый серый для блоков */
+    --card-hover: #21252e;         /* Интерактивный серый при наведении */
+    --text-color: #f8fafc;         /* Мягкий белый */
+    --text-muted: #94a3b8;         /* Серебристый металлик для описаний */
+    --accent-color: #df2a2a;       /* Элитный насыщенный красный */
+    --accent-hover: #b81e1e;
+    --border-color: #2d323f;       /* Стальной серый для границ */
+    --border-active: #e2e8f0;      /* Светлая сталь для фокуса */
     --font-sans: 'Inter', sans-serif;
     --font-display: 'Cabinet Grotesk', sans-serif;
     --font-mono: 'Space Mono', monospace;
-    --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * {
@@ -27,17 +28,16 @@ body {
     font-family: var(--font-sans);
     line-height: 1.6;
     overflow-x: hidden;
-    /* Звездный фон в стиле Inside Discovery */
+    /* Тонкий звездный градиент для глубины */
     background-image: 
-        radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
-        radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
-        radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
-    background-size: 550px 550px, 350px 350px, 250px 250px;
-    background-position: 0 0, 40px 60px, 130px 270px;
+        radial-gradient(var(--border-color) 1px, transparent 1px),
+        radial-gradient(var(--border-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
 }
 
 .container {
-    max-width: 1300px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 3rem 2rem;
     min-height: 100vh;
@@ -45,17 +45,20 @@ body {
     flex-direction: column;
 }
 
-/* Навигация */
+/* Шапка */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 2rem;
+    margin-bottom: 3.5rem;
 }
 
 .logo {
     font-family: var(--font-display);
     font-size: 1.8rem;
+    font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -0.5px;
     cursor: pointer;
@@ -73,8 +76,8 @@ header {
     text-transform: uppercase;
     letter-spacing: 1px;
     border: 1px solid var(--border-color);
-    padding: 0.6rem 1.2rem;
-    background-color: rgba(255, 255, 255, 0.02);
+    padding: 0.6rem 1.4rem;
+    background-color: rgba(255, 255, 255, 0.01);
     transition: var(--transition);
 }
 
@@ -84,68 +87,127 @@ header {
     color: var(--bg-color);
 }
 
-/* Главная секция */
+/* Сетка контента */
 main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: 3.5rem;
 }
 
-/* Заголовок в стиле Pitchfork */
-.hero-section {
-    text-align: center;
-    margin-bottom: 2rem;
+/* Двухколоночная Герой-Секция для заполнения пустоты */
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 3.5rem;
+}
+
+@media (max-width: 992px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+.hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .hero-tag {
     font-family: var(--font-mono);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--accent-color);
     text-transform: uppercase;
     letter-spacing: 3px;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
 }
 
 .hero-title {
     font-family: var(--font-display);
-    font-size: 5rem;
+    font-size: 4.5rem;
     line-height: 0.95;
     text-transform: uppercase;
     letter-spacing: -2px;
     margin-bottom: 1.5rem;
 }
 
-@media (max-width: 768px) {
-    .hero-title {
-        font-size: 3rem;
-    }
-}
-
 .hero-subtitle {
     font-size: 1.1rem;
     color: var(--text-muted);
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 650px;
+}
+
+/* Карточка статуса справа для заполнения пустоты */
+.status-dashboard {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.status-header {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.status-val {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.status-val.active {
+    color: #00cc66;
+}
+
+.status-val.accent {
+    color: var(--accent-color);
 }
 
 /* Поиск */
 .search-section {
-    max-width: 800px;
+    max-width: 1000px;
     width: 100%;
     margin: 0 auto;
 }
 
 .search-wrapper {
     position: relative;
-    border-bottom: 2px solid var(--border-color);
+    border: 1px solid var(--border-color);
+    background-color: var(--card-bg);
     display: flex;
     align-items: center;
+    padding: 0.5rem;
     transition: var(--transition);
 }
 
 .search-wrapper:focus-within {
-    border-bottom-color: var(--accent-color);
+    border-color: var(--border-active);
+    box-shadow: 0 0 15px rgba(255, 76, 37, 0.15);
 }
 
 .search-input {
@@ -154,82 +216,114 @@ main {
     border: none;
     color: var(--text-color);
     font-family: var(--font-sans);
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 500;
-    padding: 1rem 0;
+    padding: 1rem 1.5rem;
     outline: none;
 }
 
 .search-input::placeholder {
-    color: #4b515a;
+    color: #5d6778;
 }
 
 .search-button {
-    background: transparent;
+    background: var(--accent-color);
     border: none;
-    color: var(--accent-color);
+    color: #ffffff;
     font-family: var(--font-mono);
     font-size: 0.9rem;
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 1px;
-    padding: 1rem 2rem;
+    height: 100%;
+    padding: 1.2rem 2.5rem;
     cursor: pointer;
     transition: var(--transition);
+    align-self: stretch;
+    display: flex;
+    align-items: center;
 }
 
 .search-button:hover {
-    color: var(--text-color);
-    transform: translateX(5px);
+    background-color: var(--accent-hover);
 }
 
-/* Сетка популярных плагинов (Featured) */
+/* Сетки карточек популярных плагинов */
 .featured-section {
-    margin-top: 1rem;
-    transition: var(--transition);
+    width: 100%;
+}
+
+.featured-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.8rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.featured-section-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    text-transform: uppercase;
+}
+
+.featured-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 992px) {
+    .featured-grid-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 .featured-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+@media (max-width: 576px) {
+    .featured-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .featured-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    padding: 2rem;
+    padding: 1.8rem;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 180px;
+    min-height: 160px;
     transition: var(--transition);
     position: relative;
-    overflow: hidden;
 }
 
-.featured-card::before {
+.featured-card::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
+    bottom: -1px;
+    left: -1px;
+    width: 0;
+    height: 3px;
     background-color: var(--accent-color);
-    transform: scaleY(0);
-    transform-origin: bottom;
     transition: var(--transition);
 }
 
 .featured-card:hover {
-    border-color: #3e444f;
-    transform: translateY(-5px);
+    border-color: var(--border-active);
+    background-color: var(--card-hover);
+    transform: translateY(-3px);
 }
 
-.featured-card:hover::before {
-    transform: scaleY(1);
+.featured-card:hover::after {
+    width: calc(100% + 2px);
 }
 
 .card-category {
@@ -242,10 +336,10 @@ main {
 
 .card-title {
     font-family: var(--font-display);
-    font-size: 2rem;
+    font-size: 1.8rem;
     text-transform: uppercase;
-    margin-top: 1rem;
-    line-height: 1;
+    margin-top: 0.5rem;
+    line-height: 1.1;
 }
 
 .card-action {
@@ -257,15 +351,21 @@ main {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    transition: var(--transition);
 }
 
-/* Результаты поиска */
+.featured-card:hover .card-action {
+    color: var(--text-color);
+    transform: translateX(5px);
+}
+
+/* Панель результатов */
 .results-section {
     display: none;
     border: 1px solid var(--border-color);
     background-color: var(--card-bg);
     padding: 3rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
     animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -276,7 +376,7 @@ main {
 
 .results-header {
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 1.5rem;
+    padding-bottom: 1.2rem;
     margin-bottom: 2.5rem;
     display: flex;
     justify-content: space-between;
@@ -287,7 +387,6 @@ main {
     font-family: var(--font-display);
     font-size: 2rem;
     text-transform: uppercase;
-    letter-spacing: -0.5px;
 }
 
 .results-source {
@@ -298,17 +397,18 @@ main {
     letter-spacing: 1.5px;
 }
 
-/* Театр/Основной плеер */
+/* Главный плеер */
 .main-player-wrapper {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 2.5rem;
     margin-bottom: 3rem;
 }
 
 @media (max-width: 992px) {
     .main-player-wrapper {
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
 }
 
@@ -317,8 +417,10 @@ main {
 }
 
 .featured-video-title {
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    line-height: 1.1;
+    text-transform: uppercase;
     margin-bottom: 1rem;
 }
 
@@ -340,8 +442,8 @@ main {
 }
 
 .visualizer-container {
-    height: 150px;
-    background-color: #08090b;
+    height: 140px;
+    background-color: #0b0d11;
     border: 1px solid var(--border-color);
     position: relative;
 }
@@ -379,7 +481,7 @@ main {
 .progress-bar-container {
     flex: 1;
     height: 6px;
-    background-color: #22252a;
+    background-color: var(--border-color);
     cursor: pointer;
     position: relative;
 }
@@ -396,7 +498,7 @@ main {
     color: var(--text-muted);
 }
 
-/* Сетка второстепенных результатов */
+/* Сетка других результатов */
 .secondary-results {
     border-top: 1px solid var(--border-color);
     padding-top: 2.5rem;
@@ -427,8 +529,8 @@ main {
 }
 
 .embed-item:hover {
-    border-color: #3e444f;
-    background-color: rgba(255, 255, 255, 0.03);
+    border-color: var(--border-active);
+    background-color: rgba(255, 255, 255, 0.02);
 }
 
 .embed-item-header {
@@ -436,7 +538,7 @@ main {
 }
 
 .embed-item-title {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.4;
     margin-bottom: 0.5rem;
@@ -454,6 +556,7 @@ main {
     height: 0;
     overflow: hidden;
     background-color: #000;
+    border: 1px solid var(--border-color);
 }
 
 .iframe-wrapper iframe {
@@ -468,10 +571,11 @@ main {
 /* Панель «Звук не найден» */
 .not-found-panel {
     display: none;
-    border: 2px dashed var(--accent-color);
+    border: 1px solid var(--border-color);
     padding: 4rem 2rem;
     text-align: center;
-    background-color: rgba(255, 76, 37, 0.03);
+    background-color: rgba(223, 42, 42, 0.03);
+    border-left: 4px solid var(--accent-color);
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
@@ -493,7 +597,7 @@ main {
 .btn-action {
     background: transparent;
     color: var(--text-color);
-    border: 2px solid var(--text-color);
+    border: 1px solid var(--text-color);
     font-family: var(--font-mono);
     font-weight: 700;
     font-size: 0.9rem;
@@ -567,7 +671,7 @@ main {
 
 /* Дропзона */
 .file-dropzone {
-    border: 2px dashed var(--border-color);
+    border: 1px dashed var(--border-color);
     background-color: rgba(255, 255, 255, 0.01);
     padding: 3rem;
     text-align: center;
@@ -581,7 +685,7 @@ main {
 
 .file-dropzone:hover, .file-dropzone.dragover {
     border-color: var(--accent-color);
-    background-color: rgba(255, 76, 37, 0.02);
+    background-color: rgba(223, 42, 42, 0.02);
 }
 
 .file-dropzone-icon {
@@ -643,12 +747,6 @@ main {
     letter-spacing: 1px;
     z-index: 1000;
     display: none;
-    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes slideUp {
-    from { transform: translateY(50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
 }
 
 /* Подвал */
@@ -659,7 +757,7 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #4b515a;
+    color: var(--text-muted);
     font-family: var(--font-mono);
     font-size: 0.8rem;
     letter-spacing: 0.5px;
