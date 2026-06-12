@@ -95,27 +95,14 @@ main {
     gap: 3.5rem;
 }
 
-/* Двухколоночная Герой-Секция для заполнения пустоты */
-.hero-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 3rem;
-    align-items: center;
+/* Центрированная Герой-Секция */
+.hero-section {
+    text-align: center;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 3.5rem;
-}
-
-@media (max-width: 992px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-}
-
-.hero-text {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .hero-tag {
@@ -129,63 +116,24 @@ main {
 
 .hero-title {
     font-family: var(--font-display);
-    font-size: 4.5rem;
+    font-size: 5rem;
     line-height: 0.95;
     text-transform: uppercase;
     letter-spacing: -2px;
     margin-bottom: 1.5rem;
 }
 
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+}
+
 .hero-subtitle {
     font-size: 1.1rem;
     color: var(--text-muted);
-    max-width: 650px;
-}
-
-/* Карточка статуса справа для заполнения пустоты */
-.status-dashboard {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-}
-
-.status-header {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-}
-
-.status-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.status-label {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-}
-
-.status-val {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    font-weight: 700;
-}
-
-.status-val.active {
-    color: #00cc66;
-}
-
-.status-val.accent {
-    color: var(--accent-color);
+    max-width: 700px;
+    margin: 0 auto;
 }
 
 /* Поиск */

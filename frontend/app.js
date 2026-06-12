@@ -136,11 +136,11 @@ async function performSearch() {
                 resultsSource.textContent = 'YouTube';
                 playerCategory.textContent = 'YouTube видео-превью';
                 
-                // Встраиваем первое видео с автоплеем и без звука (чтобы браузер разрешил автовоспроизведение)
+                // Встраиваем первое видео со стандартными разрешениями, чтобы звук работал корректно и плеер не зависал
                 const firstVideo = data.results[0];
                 youtubePlayerWrapper.style.display = 'block';
                 youtubePlayerWrapper.innerHTML = `
-                    <iframe src="https://www.youtube.com/embed/${firstVideo.id}?autoplay=1&mute=1&enablejsapi=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/${firstVideo.id}?rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 `;
                 playerPluginTitle.textContent = firstVideo.title;
                 playerAuthor.textContent = `Канал: ${firstVideo.channel} • Длительность: ${firstVideo.duration}`;
@@ -308,7 +308,7 @@ function renderYoutubeEmbeds(videos) {
                 <div class="embed-item-channel">${video.channel} • [${video.duration}]</div>
             </div>
             <div class="iframe-wrapper">
-                <iframe src="https://www.youtube.com/embed/${video.id}?autoplay=0&enablejsapi=1" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/${video.id}?rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
         `;
         embedsContainer.appendChild(item);
