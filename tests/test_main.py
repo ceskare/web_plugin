@@ -113,6 +113,25 @@ def test_admin_endpoints_unauthorized(client):
     response = client.post("/api/admin/moderate?sound_id=1&action=approve")
     assert response.status_code == 401
 
+    # Очищаем ОЗУ-хранилище попыток входа
+    from backend.main import login_attempts
+    login_attempts.clear()
+
+def test_admin_brute_force_lockout(client):
+    # Симулируем 5 неверных попыток входа
+    for _ in range(5):
+        response = client.get("/api/admin/pending", headers={"Authorization": "wrong-password"})
+        assert response.status_code == 401
+        
+    # 6-я попытка даже с правильным паролем должна быть заблокирована по HTTP 429
+    response = client.get("/api/admin/pending", headers={"Authorization": "admin"})
+    assert response.status_code == 429
+    assert "Слишком много неверных попыток" in response.json()["detail"]
+    
+    # Очищаем ОЗУ-хранилище, чтобы другие тесты проходили успешно
+    from backend.main import login_attempts
+    login_attempts.clear()
+
 
 def test_upload_invalid_captcha(client):
     # Тест загрузки файла с неверной капчей

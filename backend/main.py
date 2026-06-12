@@ -2,7 +2,9 @@ import os
 import shutil
 import uuid
 import mimetypes
-from fastapi import FastAPI, Depends, UploadFile, File, Form, HTTPException, Header, status
+import time
+import hmac
+from fastapi import FastAPI, Depends, UploadFile, File, Form, HTTPException, Header, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
@@ -28,6 +30,39 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Хранилище неудачных попыток входа: {ip: {"attempts": int, "blocked_until": float}}
+login_attempts = {}
+
+def check_brute_force(ip: str):
+    """
+    Проверяет, не заблокирован ли IP-адрес из-за слишком большого количества попыток подбора.
+    """
+    now = time.time()
+    if ip in login_attempts:
+        record = login_attempts[ip]
+        if record["blocked_until"] > now:
+            minutes_left = int((record["blocked_until"] - now) // 60) + 1
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=f"Слишком много неверных попыток. Доступ временно заблокирован. Попробуйте через {minutes_left} мин."
+            )
+        # Если время блокировки прошло, сбрасываем попытки
+        if record["blocked_until"] > 0 and record["blocked_until"] <= now:
+            login_attempts.pop(ip, None)
+
+def register_failed_attempt(ip: str):
+    """
+    Регистрирует неудачную попытку входа и блокирует IP при 5 ошибках.
+    """
+    now = time.time()
+    if ip not in login_attempts:
+        login_attempts[ip] = {"attempts": 1, "blocked_until": 0}
+    else:
+        login_attempts[ip]["attempts"] += 1
+        
+    if login_attempts[ip]["attempts"] >= 5:
+        login_attempts[ip]["blocked_until"] = now + 15 * 60 # Блокировка на 15 минут
 
 # Инициализация базы данных при запуске
 @app.on_event("startup")
@@ -163,11 +198,23 @@ async def upload_sound(
 
     return {"message": "Звук успешно загружен и отправлен на модерацию."}
 
+# Роут для секретной админ-панели (скрыта от обычных пользователей)
+@app.get("/control-room")
+def get_control_room():
+    return FileResponse(os.path.join(BASE_DIR, "frontend", "control-room.html"))
+
 # Эндпоинты администрирования
 @app.get("/api/admin/pending")
-def get_pending_sounds(authorization: str = Header(None), db: Session = Depends(get_db)):
-    if not authorization or authorization != ADMIN_PASSWORD:
+def get_pending_sounds(request: Request, authorization: str = Header(None), db: Session = Depends(get_db)):
+    client_ip = request.client.host
+    check_brute_force(client_ip)
+    
+    if not authorization or not hmac.compare_digest(authorization, ADMIN_PASSWORD):
+        register_failed_attempt(client_ip)
         raise HTTPException(status_code=401, detail="Неверный пароль администратора")
+    
+    # Сбрасываем счетчик неудачных попыток при успешном входе
+    login_attempts.pop(client_ip, None)
     
     pending = db.query(CustomSound).filter(CustomSound.is_approved == False).all()
     results = []
@@ -185,13 +232,20 @@ def get_pending_sounds(authorization: str = Header(None), db: Session = Depends(
 
 @app.post("/api/admin/moderate")
 def moderate_sound(
+    request: Request,
     sound_id: int,
-    action: str,  # "approve" или "reject"
+    action: str,  # "approve" or "reject"
     authorization: str = Header(None),
     db: Session = Depends(get_db)
 ):
-    if not authorization or authorization != ADMIN_PASSWORD:
+    client_ip = request.client.host
+    check_brute_force(client_ip)
+    
+    if not authorization or not hmac.compare_digest(authorization, ADMIN_PASSWORD):
+        register_failed_attempt(client_ip)
         raise HTTPException(status_code=401, detail="Неверный пароль администратора")
+    
+    login_attempts.pop(client_ip, None)
     
     sound = db.query(CustomSound).filter(CustomSound.id == sound_id).first()
     if not sound:
@@ -200,7 +254,6 @@ def moderate_sound(
     if action == "approve":
         sound.is_approved = True
         
-        # Добавляем плагин в список известных плагинов, если его там нет
         plugin_exists = db.query(Plugin).filter(Plugin.name.ilike(sound.plugin_name)).first()
         if not plugin_exists:
             new_plugin = Plugin(name=sound.plugin_name)
@@ -210,7 +263,6 @@ def moderate_sound(
         return {"message": "Звук одобрен и опубликован."}
         
     elif action == "reject":
-        # Удаляем файл с диска
         if os.path.exists(sound.file_path):
             try:
                 os.remove(sound.file_path)
