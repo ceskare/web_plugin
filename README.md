@@ -1,5 +1,7 @@
 # FL Pulse — FL Studio Plugin Sound Board
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/ceskare/web_plugin)
+
 Веб-сервис для мгновенного прослушивания оригинального звучания плагинов FL Studio. Пользователь вводит название плагина, и сервис автоматически находит и воспроизводит оригинальное аудио-превью (из YouTube, SoundCloud или загруженных автором файлов).
 
 ## Особенности проекта
