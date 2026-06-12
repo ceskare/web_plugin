@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FL PULSE — Послушай плагин FL Studio</title>
+    <title>FL PULSE — Сэмплы и оригинальное звучание плагинов FL Studio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Шапка сайта -->
+        <!-- Шапка -->
         <header>
-            <div class="logo">FL <span>Pulse</span></div>
+            <div class="logo" onclick="window.location.reload()">FL <span>Pulse</span></div>
             <div class="nav-links">
                 <a href="admin.html">Панель модератора</a>
             </div>
@@ -18,82 +18,143 @@
 
         <!-- Основной контент -->
         <main>
-            <!-- Поиск -->
+            <!-- Герой-секция в стиле Pitchfork -->
+            <section class="hero-section" id="heroSection">
+                <div class="hero-tag">Музыкальная энциклопедия</div>
+                <h1 class="hero-title">FL Studio<br>Inside Sounds</h1>
+                <p class="hero-subtitle">
+                    Интерактивный архив оригинального звучания плагинов. Введите название интересующего синтезатора или эффекта ниже и послушайте оригинальные превью.
+                </p>
+            </section>
+
+            <!-- Поисковая панель -->
             <section class="search-section">
                 <div class="search-wrapper">
                     <input type="text" id="searchInput" class="search-input" placeholder="Введите название плагина (например, Serum)..." autocomplete="off">
-                    <button id="searchBtn" class="search-button">Искать</button>
+                    <button id="searchBtn" class="search-button">Найти</button>
                 </div>
             </section>
 
-            <!-- Результаты поиска (Кастомный плеер для оригинальных загрузок) -->
+            <!-- Популярные плагины (Featured Grid) -->
+            <section class="featured-section" id="featuredSection">
+                <div class="card-category">Быстрый выбор</div>
+                <div class="featured-grid">
+                    <div class="featured-card" onclick="quickSearch('Serum')">
+                        <div class="card-category">Synthesizer</div>
+                        <div class="card-title">Serum</div>
+                        <div class="card-action">Послушать →</div>
+                    </div>
+                    <div class="featured-card" onclick="quickSearch('Gross Beat')">
+                        <div class="card-category">Time Effect</div>
+                        <div class="card-title">Gross Beat</div>
+                        <div class="card-action">Послушать →</div>
+                    </div>
+                    <div class="featured-card" onclick="quickSearch('Harmor')">
+                        <div class="card-category">Additive Synth</div>
+                        <div class="card-title">Harmor</div>
+                        <div class="card-action">Послушать →</div>
+                    </div>
+                    <div class="featured-card" onclick="quickSearch('Sytrus')">
+                        <div class="card-category">FM Synth</div>
+                        <div class="card-title">Sytrus</div>
+                        <div class="card-action">Послушать →</div>
+                    </div>
+                    <div class="featured-card" onclick="quickSearch('FLEX')">
+                        <div class="card-category">Preset Library</div>
+                        <div class="card-title">FLEX</div>
+                        <div class="card-action">Послушать →</div>
+                    </div>
+                    <div class="featured-card" onclick="quickSearch('Sylenth1')">
+                        <div class="card-category">Subtractive Synth</div>
+                        <div class="card-title">Sylenth1</div>
+                        <div class="card-action">Послушать →</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Панель результатов -->
             <section id="resultsSection" class="results-section">
                 <div class="results-header">
-                    <div class="results-title" id="resultsTitle">Результат поиска</div>
+                    <h2 class="results-title" id="resultsTitle">Результаты</h2>
                     <div class="results-source" id="resultsSource">YouTube</div>
                 </div>
 
-                <!-- Кастомный плеер для загруженных треков -->
-                <div id="customPlayerContainer" class="custom-player" style="display: none;">
-                    <div class="player-info">
-                        <div class="player-title" id="playerPluginTitle">Serum - Awesome Sound</div>
-                        <div class="player-author" id="playerAuthor">Автор: FL_Master</div>
-                    </div>
-                    
-                    <div class="visualizer-container">
-                        <canvas id="visualizer" class="visualizer-canvas"></canvas>
+                <!-- Театр / Главный проигрыватель -->
+                <div class="main-player-wrapper">
+                    <!-- Левая часть: само видео/аудио -->
+                    <div class="featured-player-container">
+                        <!-- Контейнер для YouTube (первое видео) -->
+                        <div id="youtubePlayerWrapper" class="iframe-wrapper" style="display: none;">
+                            <!-- Заполняется динамически -->
+                        </div>
+
+                        <!-- Кастомный плеер для оригинальных загрузок -->
+                        <div id="customPlayerContainer" class="custom-player" style="display: none;">
+                            <div class="visualizer-container">
+                                <canvas id="visualizer" class="visualizer-canvas"></canvas>
+                            </div>
+                            <div class="player-controls">
+                                <button id="playBtn" class="btn-play">Play</button>
+                                <div class="progress-bar-container" id="progressBar">
+                                    <div class="progress-bar-fill" id="progressFill"></div>
+                                </div>
+                                <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="player-controls">
-                        <button id="playBtn" class="btn-play">Play</button>
-                        <div class="progress-bar-container" id="progressBar">
-                            <div class="progress-bar-fill" id="progressFill"></div>
-                        </div>
-                        <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+                    <!-- Правая часть: метаданные текущего звука -->
+                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                        <div class="card-category" id="playerCategory">Текущее превью</div>
+                        <h3 class="featured-video-title" id="playerPluginTitle">Название плагина</h3>
+                        <p class="featured-video-info" id="playerAuthor">Автор видео/файла</p>
                     </div>
                 </div>
 
-                <!-- Эмбеды для YouTube / SoundCloud -->
-                <div id="embedsContainer" class="embed-container">
-                    <!-- Будет заполняться динамически через JS -->
+                <!-- Второстепенные совпадения (сетка других результатов) -->
+                <div class="secondary-results" id="secondaryResultsSection">
+                    <h3 class="secondary-title">Другие варианты</h3>
+                    <div class="results-grid" id="embedsContainer">
+                        <!-- Будет заполнено через JS -->
+                    </div>
                 </div>
             </section>
 
             <!-- Звук не найден -->
             <section id="notFoundPanel" class="not-found-panel">
-                <div class="not-found-title">Оригинальный звук не найден</div>
+                <div class="not-found-title">Звук не найден</div>
                 <div class="not-found-text">
-                    Мы проверили YouTube и SoundCloud, но не нашли релевантного звукового превью для этого плагина. 
-                    Помогите сообществу — загрузите короткий оригинальный сэмпл звучания этого плагина!
+                    Мы проверили YouTube и SoundCloud, но не нашли релевантного сэмпла для этого плагина.
+                    Помогите другим — загрузите короткий оригинальный сэмпл его звучания!
                 </div>
-                <button id="scrollToUploadBtn" class="btn-action">Загрузить звук</button>
+                <button id="scrollToUploadBtn" class="btn-action">Добавить сэмпл</button>
             </section>
 
             <!-- Форма добавления звука -->
             <section class="upload-section" id="uploadSection">
-                <div class="section-title">Добавить оригинальный звук плагина</div>
+                <h2 class="section-title">Добавить звук плагина</h2>
                 <form id="uploadForm">
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label" for="formPluginName">Название плагина *</label>
-                            <input type="text" id="formPluginName" class="form-input" required placeholder="Например: Harmor">
+                            <input type="text" id="formPluginName" class="form-input" required placeholder="Например: Sakura">
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="formAuthorName">Ваше имя (Имя автора) *</label>
-                            <input type="text" id="formAuthorName" class="form-input" required placeholder="Например: FL_Studio_Master">
+                            <label class="form-label" for="formAuthorName">Имя автора звука *</label>
+                            <input type="text" id="formAuthorName" class="form-input" required placeholder="Например: FL_Expert">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="formSoundTitle">Название превью *</label>
-                            <input type="text" id="formSoundTitle" class="form-input" required placeholder="Например: EDM Lead Preset Demo">
+                            <input type="text" id="formSoundTitle" class="form-input" required placeholder="Например: Pluck Preset Demo">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="formYoutubeUrl">Ссылка на видео/аудио (необязательно)</label>
                             <input type="url" id="formYoutubeUrl" class="form-input" placeholder="https://youtube.com/watch?v=...">
                         </div>
 
-                        <!-- Dropzone для аудио-файла -->
+                        <!-- Dropzone для аудио -->
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label class="form-label">Аудиофайл превью * (Разрешены: .mp3, .wav, .ogg до 5MB, до 30 секунд)</label>
+                            <label class="form-label">Аудиофайл * (.mp3, .wav, .ogg до 5MB, до 30с)</label>
                             <div class="file-dropzone" id="dropzone">
                                 <div class="file-dropzone-icon">⏏</div>
                                 <div id="dropzoneText">Перетащите файл сюда или нажмите для выбора</div>
@@ -103,13 +164,13 @@
 
                         <!-- Капча -->
                         <div class="form-group captcha-wrapper">
-                            <label class="form-label">Подтвердите, что вы не бот *</label>
+                            <label class="form-label">Вы не робот? *</label>
                             <div class="captcha-question" id="captchaQuestion">? + ?</div>
                             <input type="text" id="formCaptchaAnswer" class="form-input" required placeholder="Ответ" style="width: 120px;">
                             <input type="hidden" id="formCaptchaToken">
                         </div>
 
-                        <button type="submit" class="btn-submit">Отправить на модерацию</button>
+                        <button type="submit" class="btn-submit">Отправить модераторам</button>
                     </div>
                 </form>
             </section>
@@ -122,9 +183,15 @@
         </footer>
     </div>
 
-    <!-- Всплывающие уведомления -->
     <div id="toast" class="toast">Сообщение</div>
 
     <script src="app.js"></script>
+    <script>
+        // Функция быстрого поиска для карточек
+        function quickSearch(pluginName) {
+            document.getElementById('searchInput').value = pluginName;
+            document.getElementById('searchBtn').click();
+        }
+    </script>
 </body>
 </html>
