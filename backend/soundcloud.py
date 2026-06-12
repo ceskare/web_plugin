@@ -4,8 +4,17 @@ import re
 
 def is_relevant(query: str, title: str) -> bool:
     """
-    Проверяет, содержит ли заголовок трека ключевые слова из запроса пользователя.
+    Проверяет, содержит ли заголовок трека ключевые слова из запроса пользователя,
+    и отсекает обучающие материалы (tutorial, guide и т.д.).
     """
+    title_lower = title.lower()
+    
+    # Исключаем обучающие материалы и уроки
+    exclude_words = {"tutorial", "guide", "how to", "how do", "beginners", "course", "workflow", "learn", "basics"}
+    for ew in exclude_words:
+        if ew in title_lower:
+            return False
+
     stop_words = {"vst", "plugin", "fl", "studio", "demo", "review", "sound", "test", "showcase", "presets", "tutorial", "free", "download"}
     
     query_words = [w.strip() for w in re.split(r'\W+', query.lower()) if w.strip()]
@@ -16,8 +25,6 @@ def is_relevant(query: str, title: str) -> bool:
         
     if not query_keywords:
         return False
-        
-    title_lower = title.lower()
     
     for kw in query_keywords:
         if kw in title_lower:
@@ -30,10 +37,10 @@ def is_relevant(query: str, title: str) -> bool:
 
 def search_soundcloud(query: str) -> list:
     """
-    Выполняет поиск на SoundCloud по запросу '[Plugin Name] demo'
-    и возвращает список релевантных треков для встраивания.
+    Выполняет поиск на SoundCloud по запросу '[Plugin Name] presets demo'
+    с исключением обучающих материалов и возвращает список релевантных треков.
     """
-    search_query = f"{query} demo"
+    search_query = f"{query} presets demo"
     url = f"https://soundcloud.com/search/sounds?q={urllib.parse.quote_plus(search_query)}"
     
     req = urllib.request.Request(

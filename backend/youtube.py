@@ -5,9 +5,17 @@ import json
 
 def is_relevant(query: str, title: str) -> bool:
     """
-    Проверяет, содержит ли заголовок видео ключевые слова из запроса пользователя.
-    Это исключает ручное ведение базы синонимов или брендов.
+    Проверяет, содержит ли заголовок видео ключевые слова из запроса пользователя,
+    и отсекает обучающие материалы (tutorial, guide и т.д.).
     """
+    title_lower = title.lower()
+    
+    # Исключаем обучающие материалы и обзоры с разговорами
+    exclude_words = {"tutorial", "guide", "how to", "how do", "beginners", "course", "workflow", "learn", "basics"}
+    for ew in exclude_words:
+        if ew in title_lower:
+            return False
+
     stop_words = {"vst", "plugin", "fl", "studio", "demo", "review", "sound", "test", "showcase", "presets", "tutorial", "free", "download"}
     
     # Токенизируем запрос пользователя
@@ -20,8 +28,6 @@ def is_relevant(query: str, title: str) -> bool:
         
     if not query_keywords:
         return False
-        
-    title_lower = title.lower()
     
     # Все ключевые слова из запроса должны быть в заголовке видео
     for kw in query_keywords:
@@ -38,11 +44,11 @@ def is_relevant(query: str, title: str) -> bool:
 
 def search_youtube(query: str) -> list:
     """
-    Выполняет поиск на YouTube по запросу '[Plugin Name] FL Studio demo'
-    и возвращает список релевантных видео.
+    Выполняет поиск на YouTube по запросу '[Plugin Name] sound test presets' 
+    с исключением обучающих материалов и возвращает список релевантных видео.
     """
-    # Составляем поисковый запрос
-    search_query = f"{query} FL Studio demo"
+    # Составляем поисковый запрос с исключением уроков и гайдов
+    search_query = f"{query} sound test presets -tutorial -guide -how -course -beginners -workflow"
     url = f"https://www.youtube.com/results?search_query={urllib.parse.quote_plus(search_query)}"
     
     req = urllib.request.Request(

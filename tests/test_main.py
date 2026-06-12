@@ -73,12 +73,13 @@ def test_captcha_verification():
 def test_relevance_matching():
     # YouTube
     assert yt_relevant("Serum", "Xfer Serum Factory Presets Demo") is True
-    assert yt_relevant("Gross Beat", "FL Studio Gross Beat Tutorial") is True
-    assert yt_relevant("Harmor", "How to design a bass in Harmor") is True
+    assert yt_relevant("Gross Beat", "FL Studio Gross Beat Presets Showcase") is True
+    assert yt_relevant("Harmor", "Harmor Preset Bank Sound Test") is True
     
-    # Не совпадает название плагина
+    # Обучающие материалы и обзоры с разговорами должны отсекаться (False)
+    assert yt_relevant("Gross Beat", "FL Studio Gross Beat Tutorial") is False
+    assert yt_relevant("Harmor", "How to design a bass in Harmor") is False
     assert yt_relevant("Serum", "FL Studio beginners tutorial 2026") is False
-    assert yt_relevant("Gross Beat", "How to chop samples in Edison") is False
 
     # SoundCloud
     assert sc_relevant("Spire", "Reveal Sound Spire Trance Lead Demo") is True
